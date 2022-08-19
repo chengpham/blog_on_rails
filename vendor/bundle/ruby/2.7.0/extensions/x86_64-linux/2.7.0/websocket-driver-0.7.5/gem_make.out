@@ -1,0 +1,15 @@
+current directory: /var/task/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+/var/lang/bin/ruby -I /var/lang/lib/ruby/site_ruby/2.7.0 -r ./siteconf20220819-20-d77j24.rb extconf.rb
+creating Makefile
+
+current directory: /var/task/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+make DESTDIR\= clean
+
+current directory: /var/task/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+make DESTDIR\=
+compiling websocket_mask.c
+linking shared-object websocket_mask.so
+
+current directory: /var/task/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 websocket_mask.so ./.gem.20220819-20-g20ggc

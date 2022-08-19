@@ -1,0 +1,37 @@
+name: CI
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Environment
+        run: |
+          echo "::set-env name=AWS_DEFAULT_REGION::us-east-1"
+          echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          echo "::set-env name=AASA_SECRET_ARN::${{ secrets.AASA_SECRET_ARN }}"
+          echo "::set-env name=AASA_RESOURCE_ARN::${{ secrets.AASA_RESOURCE_ARN }}"
+          echo "::set-env name=AASA_SECRET_ARN2::${{ secrets.AASA_SECRET_ARN2 }}"
+          echo "::set-env name=AASA_RESOURCE_ARN2::${{ secrets.AASA_RESOURCE_ARN2 }}"
+          mkdir -p vendor/bundle
+      - name: Bootstrap
+        run: |
+          ./bin/bootstrap
+      - name: Wakeup
+        run: |
+          ./bin/test-ci-setup
+          if ! ./test/bin/wakeup ; then sleep 90 ; fi
+      - name: Setup (cache)
+        id: cache-setup
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
+      - name: Setup
+        run: |
+          ./bin/setup
+      - name: Test
+        run: |
+          ./bin/test

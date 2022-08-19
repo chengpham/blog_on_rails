@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+pushd test/aurora-serverless
+
+npm install
+tsc
+cdk deploy --require-approval never "*"

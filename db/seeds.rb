@@ -25,7 +25,7 @@ end
 users=User.all
 70.times do
     p=Post.create(
-        title: Faker::Quote.famous_last_words,
+        title: Faker::Quote.famous_last_words[0..40],
         body: Faker::Lorem.sentence(word_count: 100),
         user: users.sample
     )
@@ -40,7 +40,7 @@ users=User.all
 end
 70.times do
     p=Post.create(
-        title: Faker::Quote.yoda,
+        title: Faker::Quote.yoda[0..40],
         body: Faker::Lorem.sentence(word_count: 100),
         user: users.sample
     )

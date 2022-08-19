@@ -12,10 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2021_01_28_174716) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "comments", force: :cascade do |t|
+  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "body"
     t.bigint "post_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -25,7 +22,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_174716) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "posts", force: :cascade do |t|
+  create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.text "body"
     t.datetime "created_at", precision: 6, null: false
@@ -34,7 +31,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_174716) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "password_digest"
@@ -44,7 +41,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_174716) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "comments", "posts"
+  add_foreign_key "comments", "posts", on_delete: :cascade
   add_foreign_key "comments", "users"
   add_foreign_key "posts", "users"
 end

@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: BlogOnRails Lambda (HTTP API)
+
+Parameters:
+
+  RailsEnv:
+    Type: String
+    Default: production
+    AllowedValues:
+      - staging
+      - production
+
+Resources:
+
+  RailsLambda:
+    Type: AWS::Serverless::Function
+    Metadata:
+      DockerContext: .
+      Dockerfile: Dockerfile
+    Properties:
+      MemorySize: 512
+      Timeout: 100
+      Environment:
+        Variables:
+          RAILS_ENV: !Ref RailsEnv
+      FunctionName: !Join [ '', [ 'BlogOnRails-', !Ref RailsEnv, '-', !Ref 'AWS::Region' ] ]
+      Events:
+        RailsApiProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RailsApi
+      PackageType: Image
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - ssm:GetParameter
+          - ssm:GetParameters
+          - ssm:GetParametersByPath
+          - ssm:GetParameterHistory
+          Resource:
+          - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/config/blogonrails/*
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - secretsmanager:*
+          Resource:
+          - arn:aws:secretsmanager:ca-central-1:728739878736:secret:blog_on_rails_db_secret-OBbaJT*
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - rds-data:*
+          Resource:
+          - arn:aws:rds:ca-central-1:728739878736:cluster:blogonrails-chengpham*
+
+  RailsApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref RailsEnv
+
+Outputs:
+
+  RailsApiUrl:
+    Description: API Gateway Endpoint
+    Value: !Sub "https://${RailsApi}.execute-api.${AWS::Region}.amazonaws.com/${RailsEnv}/"
+
+  RailsLambdaArn:
+    Description: Lambda ARN
+    Value: !GetAtt RailsLambda.Arn

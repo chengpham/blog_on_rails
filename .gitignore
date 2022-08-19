@@ -50,3 +50,5 @@ yarn-error.log*
 /public/packs
 /public/packs-test
 .yarn-integrity
+# Lamby
+/.aws-sam
